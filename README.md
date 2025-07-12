@@ -9,20 +9,14 @@ A complete FastAPI backend for managing products and categories in an e-commerce
 - CRUD for **Products** and **Categories**
 - **SQLite + SQLAlchemy ORM**
 - ✅ Input validation using **Pydantic**
-- ❌ Handles duplicate category errors
 - ✅ Supports **partial updates** (`PATCH`)
 - ✅ Pagination for listing endpoints
 - 🧪 Interactive API docs at `/docs`
 
----
-
-## 📁 Project Structure
-
-
 ## 🚀 Getting Started
 ### 1. Clone the Repository
 
-```bash
+### bash
 git clone https://github.com/athulyajob3/scudapp.git
 cd scudapp
 
