@@ -6,7 +6,7 @@ import models, schemas
 # ----------- CATEGORY OPERATIONS -----------
 
 def create_category(db: Session, category: schemas.CategoryCreate):
-    new_category = models.Category(**category.dict())
+    new_category = models.Category(**category.model_dump())
     db.add(new_category)
     try:
         db.commit()
@@ -30,12 +30,19 @@ def update_category(db: Session, category_id: int, data: dict):
     return category
 
 def delete_category(db: Session, category_id: int):
+    # 1. Find the category by ID
     category = db.query(models.Category).filter(models.Category.id == category_id).first()
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
+
+    # 2. Delete all products in that category (if any)
+    db.query(models.Product).filter(models.Product.category_id == category_id).delete()
+
+    # 3. Delete the category itself
     db.delete(category)
     db.commit()
-    return {"detail": "Category deleted successfully"}
+
+    return {"detail": "Category and its products deleted successfully"}
 
 
 # ----------- PRODUCT OPERATIONS -----------
@@ -44,7 +51,7 @@ def create_product(db: Session, product: schemas.ProductCreate):
     category = db.query(models.Category).filter(models.Category.id == product.category_id).first()
     if not category:
         raise HTTPException(status_code=400, detail="Category ID does not exist.")
-    new_product = models.Product(**product.dict())
+    new_product = models.Product(**product.model_dump())
     db.add(new_product)
     db.commit()
     db.refresh(new_product)
